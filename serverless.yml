@@ -1,7 +1,7 @@
 # NOTE: update this with your service name
 service: notes-app-api
 
-# Create an optimized package for our functions 
+# Create an optimized package for our functions
 package:
   individually: true
 
@@ -26,34 +26,56 @@ environment:
 iamRoleStatements:
   - Effect: Allow
     Action:
-    - dynamodb:DescribeTable
-    - dynamodb:Query
-    - dynamodb:Scan
-    - dynamodb:GetItem
-    - dynamodb:PutItem
-    - dynamodb:UpdateItem
-    - dynamodb:DeleteItem
-Resource: "arn:aws:dynamodb:us-west-2:*:*"
-
+      - dynamodb:DescribeTable
+      - dynamodb:Query
+      - dynamodb:Scan
+      - dynamodb:GetItem
+      - dynamodb:PutItem
+      - dynamodb:UpdateItem
+      - dynamodb:DeleteItem
+Resource: 'arn:aws:dynamodb:us-west-2:*:*'
 
 functions:
-
   create:
     handler: create.main
-    events: 
+    events:
       - http:
         path: notes
         method: post
         cors: true
         authorizer: aws_iam
   get:
-  # Defines an HTTP API endpoint that calls the main function in get.js
-  # - path: url path is /notes/{id}
-  # - method: GET request
-  handler: get.main
-  events:
-    - http:
-        path: notes/{id}
-        method: get
-        cors: true
-        authorizer: aws_iam
+    # Defines an HTTP API endpoint that calls the main function in get.js
+    # - path: url path is /notes/{id}
+    # - method: GET request
+    handler: get.main
+    events:
+      - http:
+          path: notes/{id}
+          method: get
+          cors: true
+          authorizer: aws_iam
+  list:
+    handler: list.main
+    events:
+      - http:
+          path: notes
+          method: get
+          cors: true
+          authorizer: aws_iam
+  update:
+    handler: update.main
+    events:
+      - http: 
+          path: notes/{id}
+          method: put
+          cors: true
+          authorizer: aws_iam
+  delete:
+    handler: delete.main
+    events:
+      - http:
+          path: notes/{id}
+          method: delete
+          cors: true
+          authorizer: aws_iam
